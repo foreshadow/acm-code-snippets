@@ -4,7 +4,7 @@
 class SegmentTreeNode
 {
 public:
-    SegmentTreeNode(int l, int r, int min = maxint, int max = -maxint) : 
+    SegmentTreeNode(int l, int r, int min = maxint, int max = -maxint) :
         left(NULL), right(NULL), minimum(min), maximum(max), interval_l(l), interval_r(r) {}
     int minimum_of(int begin, int end)
     {
@@ -22,10 +22,10 @@ public:
     {
         if (begin == end) return new SegmentTreeNode(begin, end, a[begin], a[end]);
         SegmentTreeNode *node = new SegmentTreeNode(begin, end);
-        node->left = make_tree(a, begin, (begin+end)/2);
-        node->right = make_tree(a, (begin+end)/2+1, end);
+        node->left = make_tree(a, begin, (begin + end) / 2);
+        node->right = make_tree(a, (begin + end) / 2 + 1, end);
         node->minimum = min(node->left->minimum, node->right->minimum);
-        node->maximum = max(node->left->maximum, node->right->maximum);        
+        node->maximum = max(node->left->maximum, node->right->maximum);
         return node;
     }
 protected:
@@ -38,4 +38,3 @@ protected:
 private:
     static const int maxint = 2147483647;
 };
-

@@ -1,3 +1,9 @@
+# Documents
+*.docx
+*.rar
+
+#
+
 # Compiled Object files
 *.slo
 *.lo

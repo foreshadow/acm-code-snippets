@@ -121,3 +121,36 @@ template<typename T> T exGcd(T a, T b, T &x, T &y)
 { T d = a; if (b) { d = exGcd(b, a % b, y, x); y -= a / b * x; } else { x = 1; y = 0; } return d; }
 
 // end
+
+#include <stdio.h>
+#include <io.h>
+
+ifstream fin("");
+ofstream fout("_template20151013.md");
+
+void find(string filename)
+{
+    string name = filename.substr(0, filename.length()-4);
+    fout << "#" << name << endl;
+    fin.open(filename.data());
+    string str;
+    while (getline(fin, str))
+        fout << "    " << str << endl;
+    fin.close();
+}
+
+const char *to_search = ".\\*.cpp";
+
+int main()
+{
+    long handle;
+    struct _finddata_t fileinfo;
+    handle = _findfirst(to_search, &fileinfo);
+    if(-1 == handle)return -1;
+    printf("%s\n", fileinfo.name);
+    while(!_findnext(handle, &fileinfo))
+        find(fileinfo.name);
+    _findclose(handle);
+    system("pause");
+    return 0;
+}
