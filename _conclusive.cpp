@@ -126,31 +126,33 @@ template<typename T> T exGcd(T a, T b, T &x, T &y)
 #include <io.h>
 
 ifstream fin("");
-ofstream fout("_template20151013.md");
+ofstream fout("_template20151114.txt");
 
 void find(string filename)
 {
-    string name = filename.substr(0, filename.length()-4);
-    fout << "#" << name << endl;
+    string name = filename.substr(0, filename.length() - 2);
+    fout << name << endl << endl;
     fin.open(filename.data());
     string str;
     while (getline(fin, str))
-        fout << "    " << str << endl;
+        fout << str << endl;
+    fout << endl;
     fin.close();
 }
 
-const char *to_search = ".\\*.cpp";
+const char *to_search = ".\\*.h";
 
 int main()
 {
     long handle;
     struct _finddata_t fileinfo;
     handle = _findfirst(to_search, &fileinfo);
-    if(-1 == handle)return -1;
-    printf("%s\n", fileinfo.name);
+    if (-1 == handle)
+        return -1;
+    find(fileinfo.name);
     while(!_findnext(handle, &fileinfo))
         find(fileinfo.name);
     _findclose(handle);
-    system("pause");
+    //system("pause");
     return 0;
 }

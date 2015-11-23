@@ -1,18 +1,23 @@
 #include <vector>
 
+#if __cplusplus >= 201103L
+template<typename T = int>
+#else
+template<typename T>
+//or typedef int T;
+#endif
 class BinaryIndexedTree
 {
 public:
-    BinaryIndexedTree(const int &n) { a.resize(n + 1, 0); }
-    BinaryIndexedTree(int *begin, int *end) : a(begin, end) {}
-    static int lowbit(const int x) { return -x & x; }
-    int sum(int n) const { int s = 0; while (n > 0) { s += a[n]; n -= lowbit(n); } return s; }
-    int sum(int l, int r) const { return sum(r) - sum(l - 1); }
-    void add(unsigned int pos, const int k) { while (pos < a.size()) { a[pos] += k; pos += lowbit(pos); } }
+    BinaryIndexedTree(const T &n) { a.resize(n + 1, 0); }
+    BinaryIndexedTree(T *begin, T *end) : a(begin, end) {}
+    static T lowbit(const T x) { return -x & x; }
+    T sum(T n) const { T s = 0; while (n > 0) { s += a[n]; n -= lowbit(n); } return s; }
+    T sum(T l, T r) const { return sum(r) - sum(l - 1); }
+    void add(unsigned int pos, const T k) { while (pos < a.size()) { a[pos] += k; pos += lowbit(pos); } }
 protected:
-    vector<int> a;
+    vector<T> a;
 };
-
 template<typename T>
 class vector2d
 {
