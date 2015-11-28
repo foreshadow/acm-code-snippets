@@ -4,7 +4,8 @@
 template<typename T = int>
 #else
 template<typename T>
-//or typedef int T;
+// or:
+//typedef int T;
 #endif
 class BinaryIndexedTree
 {
@@ -18,6 +19,7 @@ public:
 protected:
     vector<T> a;
 };
+
 template<typename T>
 class vector2d
 {

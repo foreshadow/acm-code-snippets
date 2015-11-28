@@ -1,6 +1,14 @@
+# Folders
+Others
+Pro
+
 # Documents
 *.docx
 *.rar
+*.txt
+
+# Ignore files
+_conclusive.cpp
 
 #
 
