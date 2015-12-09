@@ -1,8 +1,10 @@
 // includes
 #include <algorithm>
 //#include <bits/stdc++.h>
+//#include <cassert>
 #include <cctype>
 #include <cmath>
+#include <climits>
 #include <cstdio>
 #include <cstring>
 #include <functional>
@@ -25,6 +27,8 @@
 #define FOR2(i, n, j, m) FOR(i, n) FOR(j, m)
 #define FORITER(i, a) for (__typeof a.begin() i = a.begin(); i != a.end(); i++)
 
+#define allof(a) a.begin(), a.end()
+
 // debug
 #ifndef ONLINE_JUDGE
 #define DEBUG(a) (cout << "Line " << __LINE__  << ": " #a " = " << (a) << endl, a)
@@ -33,14 +37,16 @@
 #define DEBUG(a) (a)
 #define PRINT(a)
 #endif
+#define DB DEBUG
+#define PR PRINT
 
 // namespace
 using namespace std;
 
 // type definitions
 typedef unsigned int uint;
-typedef long long ll;
-typedef unsigned long long ull;
+typedef long long int ll;
+typedef unsigned long long int ull;
 typedef long double ld;
 typedef pair<int, int> pii;
 typedef pair<double, double> pdd;
@@ -50,9 +56,10 @@ typedef vector<pii> vpii;
 typedef vector<pll> vpll;
 
 // constants
-const int maxint = __INT_MAX__;
-const ll maxll = __LONG_LONG_MAX__;
+const int maxint = INT_MAX;
+const ll maxll = LLONG_MAX;
 int mod = 1000000007;
+double eps = 1e-9;
 
 // simplifying functions
 inline int ctoi(const char c) { return c - '0'; }
@@ -60,7 +67,7 @@ inline char itoc(const int n) { return n + '0'; }
 template<typename T> inline bool in(T x, T l, T r) { return l <= x && x <= r; }
 
 // stl functions
-template<typename T1, typename T2> inline pair<T1, T2> mp(const T1 &fst, const T2 &scd) { return make_pair(fst, scd); }
+template<typename T1, typename T2> inline pair<T1, T2> mp(const T1 &a, const T2 &b) { return make_pair(a, b); }
 template<class T> inline void srt(T &a) { sort(a.begin(), a.end()); }
 template<class T1, class T2> inline void srt(T1 &a, T2 &comp) { sort(a.begin(), a.end(), comp); }
 template<class T1, typename T2> inline int lbs(const T1 &a, const T2 k) { return lower_bound(a.begin(), a.end(), k) - a.begin(); }
@@ -129,11 +136,13 @@ template<uint n> inline void reads(int (&a)[n]) { for (uint i = 0; i < n; i++) a
 inline void reads(int *a, int l, int r) { for (int i = l; i <= r; i++) a[i] = getint(); }
 inline void reads(vector<int> &v, int n) { v.clear(); for (int i = 0; i < n; i++) v.push_back(getint()); }
 // pay attention to time consuming of copying the vector
-inline vi getints(int n) { vi v; FOR(i, n) v.push_back(getint()); return v; }
-inline vpii getpairs(int n) { vpii v; FOR(i, n) { int a = getint(); int b = getint(); v.push_back(pii(a, b)); } return v; }
-// std::string, compile error in MSC
+inline vi getints(int n) { vi v; for (int i = 0; i < n; i++) v.push_back(getint()); return v; }
+inline vpii getpairs(int n) { vpii v; for (int i = 0; i < n; i++) { int a = getint(), b = getint(); v.push_back(pii(a, b)); } return v; }
+// std::string
+#ifdef __GNUC__
 inline void read(string &str, const uint size) { char s[size]; scanf("%s", s); str = string(s); }
 inline string getstr(const uint size = 1024) { string s; read(s, size + 1); return s; }
+#endif
 } using namespace Infinity;
 
 // cstring
@@ -144,5 +153,8 @@ template<typename T> T lcm(T a, T b) { return a / gcd(a, b) * b; }
 // find (x, y) s.t. a x + b y = gcd(a, b) = d
 template<typename T> T exGcd(T a, T b, T &x, T &y)
 { T d = a; if (b) { d = exGcd(b, a % b, y, x); y -= a / b * x; } else { x = 1; y = 0; } return d; }
+// returning count of nk in range [l, r]
+template<typename T> T mps(T l, T r, T k) { return ((r - (r % k + k) % k) - (l + (k - l % k) % k)) / k + 1; }
+template<typename T> T sgn(T a) { return a == 0 ? 0 : a > 0 ? 1 : -1; }
 
 // end

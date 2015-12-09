@@ -21,6 +21,6 @@ private:
         return true;
     }
 protected:
-    const int n; int sp;
+    const int n; int sp; // last queried source
     vector<bool> used; vector<int> oq; vector<int> head; vector<int> dst; vector<Edge> e;
 };
