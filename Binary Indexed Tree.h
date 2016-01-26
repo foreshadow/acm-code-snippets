@@ -44,3 +44,5 @@ public:
 protected:
     vector2d<int> a;
 };
+
+typedef BinaryIndexedTree FenwickTree
