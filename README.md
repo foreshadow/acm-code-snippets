@@ -1,4 +1,4 @@
-# acm-code-library
+# acm-code-snippets
 They are snippets used in algorithm contest.
 Most of them used ```class``` definition rather than C programming language's
 statement in order to facilitate using them in contest and avoid naming conflict
