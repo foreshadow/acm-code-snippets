@@ -1,9 +1,3 @@
-inline namespace Infinity
-{
-inline namespace Algorithm
-{
-inline namespace StringAlgo
-{
 class Manacher
 {
 public:
@@ -52,6 +46,3 @@ protected:
     std::string d;
     std::vector<int> r;
 };
-} // namespace Infinity::Algorithm::StringAlgo
-} // namespace Infinity::Algorithm
-} // namespace Infinity
