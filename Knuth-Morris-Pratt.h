@@ -1,52 +1,45 @@
-class Knuth_Morris_Pratt
+namespace KnuthMorrisPratt
 {
-public:
-    static int kmpc(const string &s, const string &t)
+template<unsigned n> constexpr unsigned size(const char (&)[n])
+{ return n - 1; }
+
+template<class T> unsigned size(const T &a)
+{ return std::distance(std::begin(a), std::end(a)); }
+
+template<class T> std::vector<int> getFail(const T &p)
+{
+    std::vector<int> fail(size(p) + 1);
+    for (unsigned i = 1; i < size(p); i++)
     {
-        vector<int> next = getNext(t);
-        int n = s.size();
-        int m = t.size();
-        int count = 0;
-        for (int index = 0; index < n; index++)
-        {
-            int pos = 0;
-            int itr = index;
-            while (pos < m && itr < n)
-            {
-                if(s[itr] == t[pos])
-                {
-                    itr++;
-                    pos++;
-                }
-                else
-                {
-                    if(pos == 0)
-                        itr++;
-                    else
-                        pos = next[pos - 1] + 1;
-                }
-            }
-            if (pos == m && (itr - index) == m)
-                count++;
-        }
-        return count;
+        unsigned j = fail[i];
+        while (j && p[i] != p[j])
+            j = fail[j];
+        fail[i + 1] = p[i] == p[j] ? j + 1 : 0;
     }
-private:
-    static vector<int> getNext(const string &str)
+    return fail;
+}
+
+template<class T1, class T2> std::vector<int> kmpv(const T1 &t, const T2 &p)
+{
+    std::vector<int> f = getFail(p);
+    std::vector<int> r;
+    for (unsigned i = 0, j = 0; i < size(t); i++)
     {
-        int n = str.size();
-        vector<int> next(n);
-        next[0] = -1;
-        for(int i = 1; i < n; i++)
+        while (j && p[j] != t[i])
+            j = f[j];
+        if (p[j] == t[i])
+            j++;
+        if (j == size(p))
         {
-            int j = next[i - 1];
-            while (str[i] != str[j + 1] && j >= 0)
-                j = next[j];
-            if (str[i] == str[j + 1])
-                next[i] = j + 1;
-            else
-                next[i] = 0;
+            r.push_back(i - j + 1);
+            j = f[j];
         }
-        return next;
     }
-};
+    return r;
+}
+
+template<class T1, class T2> int kmpc(const T1 &s, const T2 &t)
+{
+    return kmpv(s, t).size();
+}
+} // namespace KnuthMorrisPratt
