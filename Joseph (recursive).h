@@ -9,3 +9,16 @@ protected:
     int n;
     int k;
 };
+
+// latest version below
+// may be similar with the class above
+class Joseph
+{
+public:
+    Joseph(unsigned n, unsigned k) : n(n), k(k) {}
+    unsigned solve() { return f(n); } // index of the last one, 0-based
+private:
+    unsigned f(unsigned x) { return x == 1 ? 0 : (f(x - 1) + k) % x; }
+protected:
+    unsigned n, k;
+};

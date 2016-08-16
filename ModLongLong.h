@@ -1,20 +1,27 @@
 template<unsigned long long n>
-class ModLongLong
+class ModLongLong // operator %(int, int) is faster
 {
     typedef long long ll;
     typedef ModLongLong mll;
-    static void exGcd(ll a, ll b, ll &x, ll &y) { if (b) { exGcd(b, a % b, y, x);  y -= a / b * x; } else { x = 1; y = 0; } }
+    static void exGcd(ll a, ll b, ll &x, ll &y)
+    { if (b) { exGcd(b, a % b, y, x);  y -= a / b * x; } else { x = 1; y = 0; } }
+
 public:
-    ModLongLong(const ll &a) : data((a + n) % n) {}
+    ModLongLong(const ll &a) : data((a % n + n) % n) {}
     ll toLongLong() const { return data; }
-    mll friend operator +(const mll &a, const mll &b) { return ModLongLong((a.data + b.data) % n); }
-    mll friend operator -(const mll &a, const mll &b) { return ModLongLong((a.data - b.data + n) % n); }
-    mll friend operator *(const mll &a, const mll &b) { return ModLongLong((a.data * b.data) % n); }
-    mll friend operator /(const mll &a, const mll &b) { ll x = 0, y = 0; exGcd(b.data, n, x, y); x = (x + n) % n; return ModLongLong((a.data * x) % n); }
-    mll operator +=(const mll &b) { *this = *this + b; return *this; }
-    mll operator -=(const mll &b) { *this = *this - b; return *this; }
-    mll operator *=(const mll &b) { *this = *this * b; return *this; }
-    mll operator /=(const mll &b) { *this = *this / b; return *this; }
+    mll operator +(const mll &b) const { return this->data + b.data; }
+    mll operator -(const mll &b) const { return this->data - b.data; }
+    mll operator *(const mll &b) const { return this->data * b.data; }
+    mll operator /(const mll &b) const
+    { ll x = 0, y = 0; exGcd(b.data, n, x, y); x = (x + n) % n; return this->data * x; }
+    mll pow(ll b) const
+    { mll p = 1; for (mll a = *this; b; a *= a, b >>= 1) if (b & 1ll) p *= a; return p; }
+    mll operator +=(const mll &b) { return *this = *this + b; }
+    mll operator -=(const mll &b) { return *this = *this - b; }
+    mll operator *=(const mll &b) { return *this = *this * b; }
+    mll operator /=(const mll &b) { return *this = *this / b; }
+    mll pow_assign(ll b) { return *this = this->pow(b); }
+
 protected:
     ll data;
 };
