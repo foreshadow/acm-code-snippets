@@ -1,33 +1,29 @@
 class KnuthMorrisPratt
 {
 public:
-    static vector<int> kmpv(const string &t, const string &p)
+    KnuthMorrisPratt(const string &pattern) : pattern(pattern), fail(pattern.size() + 1)
     {
-        vector<int> f = getFail(p), r;
-        for (unsigned i = 0, j = 0; i < t.size(); i++)
-        {
-            while (j && p[j] != t[i]) j = f[j];
-            if (p[j] == t[i]) j++;
-            if (j == p.size()) { r.push_back(i - j + 1); j = f[j]; }
+        for (unsigned i = 1; i < pattern.size(); i++) {
+            unsigned j = fail[i];
+            while (j && pattern[i] != pattern[j]) j = fail[j];
+            fail[i + 1] = pattern[i] == pattern[j] ? j + 1 : 0;
+        }
+    }
+
+    vector<int> match(const string &s)
+    {
+        vector<int> r;
+        for (unsigned i = 0, j = 0; i < s.size(); i++) {
+            while (j && pattern[j] != s[i]) j = fail[j];
+            if (pattern[j] == s[i]) j++;
+            if (j == pattern.size()) { r.push_back(i - j + 1); j = fail[j]; }
         }
         return r;
     }
 
-    static int kmpc(const string &s, const string &t)
-    { return kmpv(s, t).size(); }
-
-private:
-    static vector<int> getFail(const string &p)
-    {
-        vector<int> fail(p.size() + 1);
-        for (unsigned i = 1; i < p.size(); i++)
-        {
-            unsigned j = fail[i];
-            while (j && p[i] != p[j]) j = fail[j];
-            fail[i + 1] = p[i] == p[j] ? j + 1 : 0;
-        }
-        return fail;
-    }
+protected:
+    string pattern;
+    vector<int> fail;
 };
 
 // generic ver.
