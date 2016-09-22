@@ -43,8 +43,8 @@ T convexHull(T first, T last) // Graham scan
     T s = first--;
     if (s == last)
         return s;
-    for (T t = ++T(s); t != last; std::iter_swap(++s, t++))
-        while (toRight(*--T(s), *s, *t))
+    for (T t = next(s); t != last; std::iter_swap(++s, t++))
+        while (toRight(*prev(s), *s, *t))
             --s;
     for (T i = first; i != last; i++)
     {

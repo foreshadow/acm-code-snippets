@@ -10,7 +10,11 @@ Pro
 # Ignore files
 _conclusive.cpp
 
-#
+# PHP
+*.php
+
+
+
 
 # Compiled Object files
 *.slo

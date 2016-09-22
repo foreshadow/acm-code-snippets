@@ -15,7 +15,7 @@ public:
     
     vector<Int> shortestPath(size_t s)
     {
-        vector<Int> d(n, INFINITY);
+        vector<Int> d(n, UNREACHABLE);
         priority_queue<Pair, vector<Pair>, greater<Pair>> q;
         q.emplace(s, d[s] = 0);
         while (!q.empty()) {
@@ -23,9 +23,9 @@ public:
             q.pop();
             size_t v = p.first;
             if (d[v] >= p.second) {
-                for (size_t i = 0; i < adj[v].size(); i++){
+                for (size_t i = 0; i < adj[v].size(); i++) {
                     Pair e = adj[v][i];
-                    if (d[e.first] > d[v] + e.second){
+                    if (d[e.first] > d[v] + e.second) {
                         d[e.first] = d[v] + e.second;
                         q.emplace(d[e.first], e.first);
                     }
@@ -36,7 +36,7 @@ public:
     }
     
     // different from what defined in <math.h>, update this if you use long long
-    static const Int INFINITY = 1000000007; 
+    static const Int UNREACHABLE = 1000000007; 
 
 protected:
     size_t n;

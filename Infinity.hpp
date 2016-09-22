@@ -2,21 +2,24 @@
 
 using namespace std;
 
-inline namespace Infinity {
-inline namespace Constant {
-constexpr const int eof = EOF;
-constexpr const int maxint = INT_MAX;
+inline namespace Infinity
+{
+inline namespace Constant
+{
+constexpr const int eof         = EOF;
+constexpr const int maxint      = INT_MAX;
 constexpr const long long maxll = LLONG_MAX;
-constexpr const double eps = DBL_EPSILON;
+constexpr const double eps      = DBL_EPSILON;
 } // namespace Infinity::Constant
 
-inline namespace TypeDefine {
-using uint = unsigned int;
-using ull = unsigned long long int;
-using ld = long double;
-template<typename T = vector<int> > using iter = typename T::iterator;
-template<typename T = int> using vector_vector = vector<vector<T> >;
-template<typename T = int, typename U = int> using vector_pair = vector<pair<T, U> >;
+inline namespace TypeDefine
+{
+using uint  = unsigned int;
+using ll    = long long int;
+using ull   = unsigned long long int;
+using ld    = long double;
+template<typename T = int> using Pair = pair<T, T>;
+template<typename T = vector<int>> using Iter = typename T::iterator;
 } // namespace Infinity::TypeDefine
 
 inline namespace IO {
@@ -39,7 +42,7 @@ inline void writef(const double a, const int n = 10)
 { printf("%.*f", n, a); }
 
 inline void writef(const long double a, const int n = 18)
-{ cout << setprecision(n) << fixed << a; }
+{ printf("%.*Lf", n, a); }
 
 inline void write(const char c)
 { printf("%c", c); }
@@ -71,14 +74,15 @@ inline void writeln()
 template<typename T> inline void writeln(const T &a)
 { write(a); write(LF); }
 
+template<typename T> inline void writeln(initializer_list<T> list)
+{ for (auto i = list.begin(); i != list.end(); i++) {
+  if (i != list.begin()) write(SP); write(*i); } write(LF); }
+
 inline void writefln(const double a, int n)
 { printf("%.*f", n, a); write(LF); }
 
 inline void writefln(const long double a, int n = 18)
-{ cout << setprecision(n) << fixed << a << endl; }
-
-inline void writesln(const int *a, const int l, const int r)
-{ for (int i = l; i <= r; i++) printf("%d ", a[i]); writeln(LF); }
+{ printf("%.*Lf", n, a); write(LF); }
 
 template<typename T> inline void writerln(T begin, T end)
 { for (write(*begin++); begin != end; ++begin) write(SP), write(*begin); write(LF); }
@@ -86,15 +90,14 @@ template<typename T> inline void writerln(T begin, T end)
 template<class T> inline void writelns(const T &a)
 { for (auto n : a) writeln(n); }
 
-template<typename T, typename ... types> inline void
-write(const T &a, const types & ... args)
-{ write(a); write(args ...); }
+template<typename T, typename... types> inline void write(const T &a, const types &...args)
+{ write(a); write(args...); }
 
-template<typename ... types> inline void writeln(const types & ... args)
-{ write(args ...); write(LF); }
+template<typename... types> inline void writeln(const types &...args)
+{ write(args...); write(LF); }
 
-template<typename ... types> inline void writeSP(const types & ... args)
-{ write(args ...); write(SP); }
+template<typename... types> inline void writeSP(const types &...args)
+{ write(args...); write(SP); }
 
 inline void writelnYN(bool b)
 { writeln(b ? "YES" : "NO"); }
@@ -102,17 +105,8 @@ inline void writelnYN(bool b)
 inline void writelnyn(bool b)
 { writeln(b ? "Yes" : "No"); }
 
-string caseSharpSpace(int n)
-{ return "Case #" + to_string(n) + ": "; }
-
-string caseNoSharpSpace(int n)
-{ return "Case " + to_string(n) + ": "; }
-
-string caseSharpNoSpace(int n)
-{ return "Case #" + to_string(n) + ":"; }
-
-string caseNoSharpNoSpace(int n)
-{ return "Case " + to_string(n) + ":"; }
+string caseN(int n, bool sharp = true, bool space = true)
+{ return string("Case ") + (sharp ? "#" : "") + to_string(n) + ":" + (space ? " " : ""); }
 
 inline int read(int &n)
 { return scanf("%d", &n); }
@@ -142,17 +136,18 @@ inline vector<pair<int, int> > getpairs(int n)
 { vector<pair<int, int> > v(n); for (int i = 0; i < n; i++) {
   int a = getint(), b = getint(); v[i] = {a, b}; } return v; }
 
-inline void read(string &str, const unsigned size)
-{ char s[size]; scanf("%s", s); str.assign(s); }
+inline void read(string &str, unsigned size)
+{ char s[++size]; scanf("%s", s); str.assign(s); }
 
-inline string getstr(const unsigned size = 0x100000)
-{ string s; read(s, size + 1); return s; }
+inline string getstr(unsigned size = 0x100000)
+{ string s; read(s, size); return s; }
 
-inline string getln(const unsigned size = 0x100000)
-{ char s[size + 1]; scanf("%[^\n]", s); getchar(); return string(s); }
+inline string getln(unsigned size = 0x100000)
+{ char s[++size]; scanf("%[^\n]", s); getchar(); return s; }
 } // namespace Infinity::IO
 
-inline namespace Miscelleneous {
+inline namespace Miscelleneous
+{
 inline constexpr int ctoi(const char c)
 { return c - '0'; }
 
@@ -229,7 +224,7 @@ template<typename T, typename F> T dichotomy(T l, T r, F check, T prec = 1)
 
 // returns the smallest value in (l, r] s.t. check(x)
 template<typename T, typename F> T dichotomy2(T l, T r, F check, T prec = 1)
-{ while (r - l > prec) { T m = l + (r - l) - (r - l) / 2; check(m) ? l = m : r = m; } return l; }
+{ while (r - l > prec) { T m = l + (r - l) - (r - l) / 2; check(m) ? r = m : l = m; } return r; }
 
 bool contains(const string &s, const string &t)
 { return s.find(t) != string::npos; }
