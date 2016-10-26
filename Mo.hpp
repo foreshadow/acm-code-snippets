@@ -50,6 +50,7 @@ protected:
 };
 
 // Codeforces 617E. XOR and Favorite Number
+
 int main(int, char *[])
 {
     int n = getint(), m = getint(), k = 0;
@@ -72,4 +73,3 @@ int main(int, char *[])
     writelns(ans);
     return 0;
 }
-

@@ -1,66 +1,46 @@
-// from ftiasch
-#include <cmath>
-#include <cassert>
-#include <cstdio>
-#include <cstring>
-#include <iostream>
-
-const int N = 1 << 21;
-
-struct Complex
+template<typename T>
+void fft(vector<complex<T>> &a, int inv = 1)
 {
-    Complex(double x = 0., double y = 0.) : x(x), y(y) {}
-
-    double x, y;
-};
-
-Complex operator + (const Complex& a, const Complex& b)
-{
-    return Complex(a.x + b.x, a.y + b.y);
-}
-
-Complex operator - (const Complex& a, const Complex& b)
-{
-    return Complex(a.x - b.x, a.y - b.y);
-}
-
-Complex operator * (const Complex& a, const Complex& b)
-{
-    return Complex(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
-}
-
-Complex a[N], b[N];
-
-const double pi = acos(-1.);
-
-void sincos(double p, double& y, double& x)
-{
-    y = sin(p);
-    x = cos(p);
-}
-
-void FFT(Complex P[], int n, int oper)
-{
-    for (int i = 1, j = 0; i < n - 1; i++) {
-        for (int s = n; j ^= s >>= 1, ~j & s;);
+    for (int i = 1, j = 0; i < a.size() - 1; i++) {
+        int s = a.size();
+        do {
+            j ^= s >>= 1;
+        } while (~j & s);
         if (i < j) {
-            std::swap(P[i], P[j]);
+            swap(a[i], a[j]);
         }
     }
-    Complex unit_p0;
-    for (int d = 0; (1 << d) < n; d++) {
-        int m = 1 << d, m2 = m * 2;
-        double p0 = pi / m * oper;
-        sincos(p0, unit_p0.y, unit_p0.x);
-        for (int i = 0; i < n; i += m2) {
-            Complex unit = 1;
-            for (int j = 0; j < m; j++) {
-                Complex &P1 = P[i + j + m], &P2 = P[i + j];
-                Complex t = unit * P1;
-                P1 = P2 - t;
-                P2 = P2 + t;
-                unit = unit * unit_p0;
+    for (int d = 0; (1 << d) < a.size(); d++) {
+        int hl = 1 << d, l = hl << 1;
+        complex<T> u0 = polar(T(1), acos(-1) / hl * inv);
+        for (int i = 0; i < a.size(); i += l) {
+            complex<T> u = 1;
+            for (int j = 0; j < hl; j++) {
+                a[i + j] += a[i + j + hl] *= u;
+                a[i + j + hl] = a[i + j] - a[i + j + hl] * T(2);
+                u *= u0;
             }
         }
     }
+}
+
+typedef vector<complex<double>> polynomial;
+
+polynomial convolution(polynomial a, polynomial b)
+{
+    int n = max(a.size(), b.size());
+    while ((-n & n) ^ n) {
+        n += -n & n;
+    }
+    n <<= 1;
+    a.resize(n);
+    b.resize(n);
+    fft(a);
+    fft(b);
+    polynomial c(n);
+    for (int i = 0; i < n; i++) {
+        c[i] = a[i] * b[i] / double(n);
+    }
+    fft(c, -1);
+    return c;
 }

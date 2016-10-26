@@ -9,4 +9,3 @@ string type(T var)
     abi::__cxa_demangle(typeid(var).name(), result, &length, &size);
     return result;
 }
-

@@ -22,9 +22,13 @@ template<typename T = int> using Pair = pair<T, T>;
 template<typename T = vector<int>> using Iter = typename T::iterator;
 } // namespace Infinity::TypeDefine
 
-inline namespace IO {
+inline namespace IO
+{
 const char LF = '\n';
 const char SP = ' ';
+
+int dbl_prec = 10;
+int ldbl_prec = 18;
 
 inline void write(const int n)
 { printf("%d", n); }
@@ -38,11 +42,11 @@ inline void write(const long long n)
 inline void write(const unsigned long long n)
 { printf("%" PRIu64, n); }
 
-inline void writef(const double a, const int n = 10)
-{ printf("%.*f", n, a); }
+inline void write(const double a)
+{ printf("%.*f", dbl_prec, a); }
 
-inline void writef(const long double a, const int n = 18)
-{ printf("%.*Lf", n, a); }
+inline void write(const long double a)
+{ printf("%.*Lf", ldbl_prec, a); }
 
 inline void write(const char c)
 { printf("%c", c); }
@@ -53,8 +57,7 @@ inline void write(const char s[])
 inline void write(const string &s)
 { printf("%s", s.data()); }
 
-template<typename T, typename U>
-inline void write(const pair<T, U> &p)
+template<typename T, typename U> inline void write(const pair<T, U> &p)
 { writeSP(p.first); write(p.second); }
 
 template<class T> inline void write(const T a)
@@ -71,21 +74,15 @@ template<typename T> inline void writer(T begin, T end)
 inline void writeln()
 { write(LF); }
 
+inline void writeSP()
+{ write(SP); }
+
 template<typename T> inline void writeln(const T &a)
 { write(a); write(LF); }
 
 template<typename T> inline void writeln(initializer_list<T> list)
 { for (auto i = list.begin(); i != list.end(); i++) {
   if (i != list.begin()) write(SP); write(*i); } write(LF); }
-
-inline void writefln(const double a, int n)
-{ printf("%.*f", n, a); write(LF); }
-
-inline void writefln(const long double a, int n = 18)
-{ printf("%.*Lf", n, a); write(LF); }
-
-template<typename T> inline void writerln(T begin, T end)
-{ for (write(*begin++); begin != end; ++begin) write(SP), write(*begin); write(LF); }
 
 template<class T> inline void writelns(const T &a)
 { for (auto n : a) writeln(n); }
@@ -114,8 +111,8 @@ inline int read(int &n)
 inline int read(long long &n)
 { return scanf("%" SCNd64, &n); }
 
-template<typename T, typename ... types> inline int read(T &n, types & ... args)
-{ return read(n) == eof ? eof : read(args ...) + 1; }
+template<typename T, typename ... types> inline int read(T &n, types &...args)
+{ return read(n) == eof ? eof : read(args...) + 1; }
 
 inline char getcc()
 { char c; do c = getchar(); while (isspace(c)); return c; }
@@ -126,15 +123,17 @@ inline int getint()
 inline long long getll()
 { long long n; read(n); return n; }
 
-inline double getdouble()
+inline double getdbl()
 { double n; scanf("%lf", &n); return n; }
 
+inline pair<int, int> getpair()
+{ pair<int, int> p; scanf("%d%d", &p.first, &p.second); return p; }
+
 inline vector<int> getints(int n)
-{ vector<int> v(n); for (int i = 0; i < n; i++) v[i] = getint(); return v; }
+{ vector<int> v(n); for (int &i : v) i = getint(); return v; }
 
 inline vector<pair<int, int> > getpairs(int n)
-{ vector<pair<int, int> > v(n); for (int i = 0; i < n; i++) {
-  int a = getint(), b = getint(); v[i] = {a, b}; } return v; }
+{ vector<pair<int, int> > v(n); for (pair<int, int> &p : v) { p = getpair(); } return v; }
 
 inline void read(string &str, unsigned size)
 { char s[++size]; scanf("%s", s); str.assign(s); }
@@ -160,6 +159,9 @@ inline int dtoi(const double d)
 template<typename T> inline constexpr bool in(T x, T l, T r)
 { return l <= x && x <= r; }
 
+template<typename T> inline constexpr pair<T, T> transpose(const pair<T, T> &p)
+{ return {p.second, p.first}; }
+
 template<class T> inline int size(const T &a)
 { return a.size(); }
 
@@ -175,12 +177,8 @@ template<class T1, typename T2> inline int lbound(const T1 &a, const T2 k)
 template<class T1, typename T2> inline int ubound(const T1 &a, const T2 k)
 { return upper_bound(a.begin(), a.end(), k) - a.begin(); }
 
-template<class T1, class T2> int count(T1 &a, T2 k)
+template<class T1, class T2> inline int count(T1 &a, T2 k)
 { return ubound(a, k) - lbound(a, k); }
-
-// returning the index of the first element matched, -1 otherwise
-template<class T1, class T2> int find(T1 &a, T2 k)
-{ return count(a, k) ? lbound(a, k) : -1; }
 
 template<typename T> inline void clear(T &a)
 { memset(a, 0, sizeof a); }
@@ -218,18 +216,27 @@ template<typename T> inline constexpr bool even(T a)
 template<typename T1, typename T2> inline constexpr T1 smod(T1 x, T2 m)
 { return x > m ? x - m : x + m < m ? x + m : x; }
 
+template<typename T> inline constexpr T lmiddle(T first, T last)
+{ return first + (last - first) / 2; }
+
+template<typename T> inline constexpr T rmiddle(T first, T last)
+{ return last - (last - first) / 2; }
+
 // returns the largest value in [l, r) s.t. check(x)
 template<typename T, typename F> T dichotomy(T l, T r, F check, T prec = 1)
-{ while (r - l > prec) { T m = l + (r - l) / 2; check(m) ? l = m : r = m; } return l; }
+{ while (r - l > prec) { T m = lmiddle(l, r); (check(m) ? l : r) = m; } return l; }
 
 // returns the smallest value in (l, r] s.t. check(x)
 template<typename T, typename F> T dichotomy2(T l, T r, F check, T prec = 1)
-{ while (r - l > prec) { T m = l + (r - l) - (r - l) / 2; check(m) ? r = m : l = m; } return r; }
+{ while (r - l > prec) { T m = rmiddle(l, r); (check(m) ? r : l) = m; } return r; }
 
 bool contains(const string &s, const string &t)
 { return s.find(t) != string::npos; }
 
 template<typename T> bool contains(const T &s, typename T::value_type t)
 { for (typename T::value_type c : s) if (c == t) return true; return false; }
+
+template<typename T> bool contains(const initializer_list<T> s, T t)
+{ return find(s.begin(), s.end(), t) != s.end(); }
 } // namespace Infinity::Miscelleneous
 } // namespace Infinity
