@@ -27,6 +27,7 @@ using ll    = long long int;
 using ull   = unsigned long long int;
 using ld    = long double;
 template<typename T = int> using Pair = pair<T, T>;
+template<typename T = int> using EdgeList = vector<Pair<T>>;
 template<typename T = vector<int>> using Iter = typename T::iterator;
 } // namespace Infinity::TypeDefine
 
@@ -172,9 +173,6 @@ template<typename T> inline constexpr bool in(T x, T l, T r)
 
 template<typename T> inline constexpr T tristate(int val, T nag, T zero, T pos)
 { return val > 0 ? pos : val < 0 ? nag : zero; }
-
-template<typename T> inline constexpr pair<T, T> transpose(const pair<T, T> &p)
-{ return {p.second, p.first}; }
 
 template<class T> inline int size(const T &a)
 { return a.size(); }
