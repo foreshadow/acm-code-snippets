@@ -1,5 +1,13 @@
 #include <bits/stdc++.h>
 
+#define define_pair(classname, x, y) \
+    struct classname { int x; int y; \
+    classname(int x = 0, int y = 0) : x(x), y(y) {} };
+
+#define define_triple(classname, x, y, z) \
+    struct classname { int x; int y; int z; \
+    classname(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {} };
+
 using namespace std;
 
 inline namespace Infinity
@@ -56,6 +64,9 @@ inline void write(const char s[])
 
 inline void write(const string &s)
 { printf("%s", s.data()); }
+
+template<typename T> inline void writeSP(const T a)
+{ write(a); write(SP); }
 
 template<typename T, typename U> inline void write(const pair<T, U> &p)
 { writeSP(p.first); write(p.second); }
@@ -158,6 +169,9 @@ inline int dtoi(const double d)
 
 template<typename T> inline constexpr bool in(T x, T l, T r)
 { return l <= x && x <= r; }
+
+template<typename T> inline constexpr T tristate(int val, T nag, T zero, T pos)
+{ return val > 0 ? pos : val < 0 ? nag : zero; }
 
 template<typename T> inline constexpr pair<T, T> transpose(const pair<T, T> &p)
 { return {p.second, p.first}; }
