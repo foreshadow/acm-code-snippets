@@ -38,3 +38,25 @@ public:
     std::vector<Node> nodes;
     Node *root;
 };
+
+
+
+
+
+class Tree
+{
+public:
+    Tree(unsigned n) : n(n), adj(n)
+    {}
+
+    void addDirected(int u, int v)
+    { adj[u].push_back(v); }
+
+    void addUndirected(int u, int v)
+    { addDirected(u, v); addDirected(v, u); }
+
+protected:
+    int n;
+    vector<vector<int>> adj;
+};
+
