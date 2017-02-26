@@ -1,11 +1,9 @@
 #include <bits/stdc++.h>
 
-#define define_pair(classname, x, y) \
-    struct classname { int x; int y; \
+#define define_pair(classname, x, y) struct classname { int x; int y; \
     classname(int x = 0, int y = 0) : x(x), y(y) {} };
 
-#define define_triple(classname, x, y, z) \
-    struct classname { int x; int y; int z; \
+#define define_triple(classname, x, y, z) struct classname { int x; int y; int z; \
     classname(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {} };
 
 using namespace std;
@@ -26,8 +24,9 @@ using uint  = unsigned int;
 using ll    = long long int;
 using ull   = unsigned long long int;
 using ld    = long double;
+template<typename T> using ConstRef = const T &;
 template<typename T = int> using Pair = pair<T, T>;
-template<typename T = int> using EdgeList = vector<Pair<T>>;
+template<typename T = int> using PairList = vector<Pair<T>>;
 template<typename T = vector<int>> using Iter = typename T::iterator;
 } // namespace Infinity::TypeDefine
 
@@ -45,11 +44,19 @@ inline void write(const int n)
 inline void write(const unsigned n)
 { printf("%u", n); }
 
+//#ifndef __i386__
 inline void write(const long long n)
-{ printf("%" PRId64, n); }
+{ printf("%lld", n); }
 
 inline void write(const unsigned long long n)
-{ printf("%" PRIu64, n); }
+{ printf("%lld", n); }
+//#endif
+
+//inline void write(const int64_t n)
+//{ printf("%" PRId64, n); }
+
+//inline void write(const uint64_t n)
+//{ printf("%" PRIu64, n); }
 
 inline void write(const double a)
 { printf("%.*f", dbl_prec, a); }
@@ -73,12 +80,10 @@ template<typename T, typename U> inline void write(const pair<T, U> &p)
 { writeSP(p.first); write(p.second); }
 
 template<class T> inline void write(const T a)
-{ for (auto i = a.begin(); i != a.end(); i++) {
-  if (i != a.begin()) write(SP); write(*i); } }
+{ for (auto i = a.begin(); i != a.end(); i++) { if (i != a.begin()) write(SP); write(*i); } }
 
 template<typename T> inline void write(initializer_list<T> list)
-{ for (auto i = list.begin(); i != list.end(); i++) {
-  if (i != list.begin()) write(SP); write(*i); } }
+{ for (auto i = list.begin(); i != list.end(); i++) { if (i != list.begin()) write(SP); write(*i); } }
 
 template<typename T> inline void writer(T begin, T end)
 { for (write(*begin++); begin != end; ++begin) write(SP), write(*begin); }
@@ -93,8 +98,7 @@ template<typename T> inline void writeln(const T &a)
 { write(a); write(LF); }
 
 template<typename T> inline void writeln(initializer_list<T> list)
-{ for (auto i = list.begin(); i != list.end(); i++) {
-  if (i != list.begin()) write(SP); write(*i); } write(LF); }
+{ for (auto i = list.begin(); i != list.end(); i++) { if (i != list.begin()) write(SP); write(*i); } write(LF); }
 
 template<class T> inline void writelns(const T &a)
 { for (auto n : a) writeln(n); }
@@ -120,7 +124,7 @@ string caseN(int n, bool sharp = true, bool space = true)
 inline int read(int &n)
 { return scanf("%d", &n); }
 
-inline int read(long long &n)
+inline int read(int64_t &n)
 { return scanf("%" SCNd64, &n); }
 
 template<typename T, typename ... types> inline int read(T &n, types &...args)
@@ -132,8 +136,8 @@ inline char getcc()
 inline int getint()
 { int n; read(n); return n; }
 
-inline long long getll()
-{ long long n; read(n); return n; }
+inline int64_t getll()
+{ int64_t n; read(n); return n; }
 
 inline double getdbl()
 { double n; scanf("%lf", &n); return n; }
@@ -156,6 +160,39 @@ inline string getstr(unsigned size = 0x100000)
 inline string getln(unsigned size = 0x100000)
 { char s[++size]; scanf("%[^\n]", s); getchar(); return s; }
 } // namespace Infinity::IO
+
+inline namespace BattleLab
+{
+class Range
+{
+    class RangeIterator
+    {
+    public:
+        RangeIterator(int current = 0, int step = 1) : current(current), step(step) {}
+        // works fine with c++11 range-based for loop ... only
+        bool operator !=(const RangeIterator &iterator) const { return current < iterator.current; }
+        int operator *() const { return current; }
+        RangeIterator operator ++() { return {current += step, step}; }
+    protected:
+        int current, step;
+    };
+public:
+    Range(int to, int from = 0, int step = 1) : from(from), to(to), step(step) {}
+    RangeIterator begin() const { return {from, step}; }
+    RangeIterator end() const { return {to, step}; }
+protected:
+    int from, to, step;
+};
+
+Range range(int to)
+{ return {to}; }
+
+Range range(int from, int to)
+{ return {to, from}; }
+
+Range range(int from, int to, int step)
+{ return {to, from, step}; }
+} // namespace Infinity::BattleLab
 
 inline namespace Miscelleneous
 {
@@ -192,6 +229,9 @@ template<class T1, typename T2> inline int ubound(const T1 &a, const T2 k)
 template<class T1, class T2> inline int count(T1 &a, T2 k)
 { return ubound(a, k) - lbound(a, k); }
 
+template<class T> inline void unique_erase(T &a)
+{ a.erase(unique(a.begin(), a.end()), a.end()); }
+
 template<typename T> inline void clear(T &a)
 { memset(a, 0, sizeof a); }
 
@@ -208,7 +248,7 @@ long long qpow(long long a, long long b, long long c)
 template<typename T> T exGcd(T a, T b, T &x, T &y)
 { T d = a; if (b) { d = exGcd(b, a % b, y, x); y -= a / b * x; } else { x = 1; y = 0; } return d; }
 
-// returns number of nks in range [l, r]
+// returns number of nk's in [l, r]
 template<typename T> inline constexpr T mps(T l, T r, T k)
 { return ((r - (r % k + k) % k) - (l + (k - l % k) % k)) / k + 1; }
 
@@ -227,6 +267,14 @@ template<typename T> inline constexpr bool even(T a)
 // simple mod
 template<typename T1, typename T2> inline constexpr T1 smod(T1 x, T2 m)
 { return x > m ? x - m : x + m < m ? x + m : x; }
+
+// lengthes of recurring period of replacement `a`
+vector<int> repetend(vector<int> a)
+{ vector<int> p(a.size(), -1);
+  for (unsigned i = 0; i < a.size(); i++) if (p[i] == -1) {
+    int c = 1; for (unsigned j = a[i]; j != i; j = a[j]) ++c;
+    p[i] = c; for (unsigned j = a[i]; j != i; j = a[j]) p[j] = c;
+  } return p; }
 
 template<typename T> inline constexpr T lmiddle(T first, T last)
 { return first + (last - first) / 2; }
