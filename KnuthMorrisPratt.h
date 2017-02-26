@@ -1,4 +1,4 @@
-class KnuthMorrisPratt
+class KnuthMorrisPratt // Infinity's
 {
 public:
     KnuthMorrisPratt(const string &pattern) : pattern(pattern), fail(pattern.size() + 1)

@@ -1,4 +1,4 @@
-class StringHash
+class StringHash // Infinity's
 {
     static const int base = 2333;
 public:

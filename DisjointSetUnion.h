@@ -1,4 +1,4 @@
-class DisjointSetUnion
+class DisjointSetUnion // Infinity's
 {
 public:
     DisjointSetUnion(int n) : a(n + 1), s(n + 1, 1)
