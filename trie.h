@@ -1,33 +1,47 @@
 class Trie
 {
-    class TrieNode
+    struct Node
     {
-    public:
-        map<char, TrieNode *> next;
-        // string data or bool exist, int count, etc..
+        unsigned p[64];
+        int n, k;
+        
+        unsigned &next(char c)
+        { return islower(c) ? p[c - 'a'] : isupper(c) ? p[c - 'A' + 26] : p[c - '0' + 52]; }
     };
 
 public:
-    Trie() : root(new TrieNode)
-    {}
+    Trie() : nodes(1)
+    { nodes.reserve(1000000); }
 
     void insert(const string &str)
     {
-        TrieNode *node = root;
-        for(int i = 0; str[i]; i++)
-        {
-            if (node->next[str[i]] == nullptr)
-                node->next[str[i]] = new TrieNode;
-            node = node->next[str[i]];
+        unsigned id = 0;
+        for (unsigned i = 0; i < str.size(); i++) {
+            if (nodes[id].next(str[i]) == 0) {
+                nodes[id].next(str[i]) = nodes.size();
+                nodes.emplace_back();
+            }
+            ++nodes[id = nodes[id].next(str[i])].n;
         }
-        // do something with node
+        ++nodes[id].k;
     }
 
-    void solve(string s)
+    long long solve()
+    { return dfs(0, 0); }
+
+private:
+    long long dfs(unsigned id, int depth)
     {
-        // your solution
+        long long r = 1ll * nodes[id].n * (nodes[id].n - 1)
+                    + 1ll * nodes[id].k * (nodes[id].k - 1) / 2;
+        for (unsigned s : nodes[id].p) {
+            if (s) {
+                r += dfs(s, depth + 1);
+            }
+        }
+        return r;
     }
-    
+
 protected:
-    TrieNode *root;
+    vector<Node> nodes;
 };

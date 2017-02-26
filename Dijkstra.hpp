@@ -1,19 +1,19 @@
 class Dijkstra
 {
     using Int   = int;                  // type of weight
-    using Pair  = pair<size_t, Int>;    // simplification
+    using Pair  = pair<unsigned, Int>;    // simplification
     
 public:
-    Dijkstra(size_t n) : n(n + 1), adj(n + 1)
+    Dijkstra(unsigned n) : n(n + 1), adj(n + 1)
     {}
 
-    void addEdge(size_t u, size_t v, Int w = 1)
+    void addEdge(unsigned u, unsigned v, Int w = 1)
     { adj[u].emplace_back(v, w); }
     
-    void addUndirectedEdge(size_t u, size_t v, Int w = 1)
+    void addUndirectedEdge(unsigned u, unsigned v, Int w = 1)
     { addEdge(u, v, w); addEdge(v, u, w); }
     
-    vector<Int> shortestPath(size_t s)
+    vector<Int> shortestPath(unsigned s)
     {
         vector<Int> d(n, UNREACHABLE);
         priority_queue<Pair, vector<Pair>, greater<Pair>> q;
@@ -21,9 +21,9 @@ public:
         while (!q.empty()) {
             Pair p = q.top();
             q.pop();
-            size_t v = p.first;
+            unsigned v = p.first;
             if (d[v] >= p.second) {
-                for (size_t i = 0; i < adj[v].size(); i++) {
+                for (unsigned i = 0; i < adj[v].size(); i++) {
                     Pair e = adj[v][i];
                     if (d[e.first] > d[v] + e.second) {
                         d[e.first] = d[v] + e.second;
@@ -39,6 +39,6 @@ public:
     static const Int UNREACHABLE = 1000000007; 
 
 protected:
-    size_t n;
+    unsigned n;
     vector<vector<Pair>> adj;
 };

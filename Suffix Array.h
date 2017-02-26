@@ -1,4 +1,4 @@
-template<typename T> // sa[1..n]:0..n-1; rank[0..n-1]:1..n; height[2..n]:0..n-1
+template<typename T> // sa[1..n]:0..n-1; rank[0..n-1]:1..n; height[2..n]:0..n-1;
 void manberMyers(T s, vector<int> &sa, vector<int> &rank, vector<int> &height)
 {
     s.push_back(typename T::value_type());
@@ -42,7 +42,7 @@ class ManberMyers
 public:
     vector<int> sa, rank, height;
 
-    template<typename T> // sa[1..n]:0..n-1; rank[0..n-1]:1..n; height[2..n]:0..n-1
+    template<typename T> // sa[1..n]:0..n-1; rank[0..n-1]:1..n; height[2..n]:0..n-1;
     ManberMyers(T s) : sa(), rank(), height()
     {
         s.push_back(typename T::value_type());

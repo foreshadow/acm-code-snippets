@@ -1,7 +1,7 @@
 class KnuthMorrisPratt // Infinity's
 {
 public:
-    KnuthMorrisPratt(const string &pattern) : pattern(pattern), fail(pattern.size() + 1)
+    KnuthMorrisPratt(const string &pattern) : pattern(pattern), fail(pattern.size() + 1)    
     {
         for (unsigned i = 1; i < pattern.size(); i++) {
             unsigned j = fail[i];
