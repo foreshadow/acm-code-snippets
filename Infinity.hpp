@@ -1,3 +1,5 @@
+// Infinity at Mar 5, 2017
+
 #include <bits/stdc++.h>
 
 #define define_pair(classname, x, y) struct classname { int x; int y; \
@@ -163,6 +165,33 @@ inline string getln(unsigned size = 0x100000)
 
 inline namespace BattleLab
 {
+class Division
+{
+public:
+    Division(int n, int k) : lb(n / k), ub(lb + 1), b(n % k)
+    {}
+
+    int operator[](int i)
+    { return i < b ? ub : lb; }
+
+protected:
+    int lb, ub, b;
+};
+
+template<typename T>
+class AdjacencyList : public vector<vector<T>>
+{
+public:
+    AdjacencyList(unsigned size = 0) : vector<vector<T>>(size)
+    {}
+
+    void addDirected(T u, T v)
+    { (*this)[u].push_back(v); }
+
+    void addUndirected(T u, T v)
+    { addDirected(u, v); addDirected(v, u); }
+};
+
 class Range
 {
     class RangeIterator
@@ -289,14 +318,5 @@ template<typename T, typename F> T dichotomy(T l, T r, F check, T prec = 1)
 // returns the smallest value in (l, r] s.t. check(x)
 template<typename T, typename F> T dichotomy2(T l, T r, F check, T prec = 1)
 { while (r - l > prec) { T m = rmiddle(l, r); (check(m) ? r : l) = m; } return r; }
-
-bool contains(const string &s, const string &t)
-{ return s.find(t) != string::npos; }
-
-template<typename T> bool contains(const T &s, typename T::value_type t)
-{ for (typename T::value_type c : s) if (c == t) return true; return false; }
-
-template<typename T> bool contains(const initializer_list<T> s, T t)
-{ return find(s.begin(), s.end(), t) != s.end(); }
 } // namespace Infinity::Miscelleneous
 } // namespace Infinity
