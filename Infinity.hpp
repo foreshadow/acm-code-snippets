@@ -217,14 +217,7 @@ protected:
     int from, to, step;
 };
 
-Range range(int to)
-{ return {to}; }
-
-Range range(int from, int to)
-{ return {to, from}; }
-
-Range range(int from, int to, int step)
-{ return {to, from, step}; }
+typedef Range range;
 
 template<typename T>
 vector<int> argsort(const vector<T> &a)
