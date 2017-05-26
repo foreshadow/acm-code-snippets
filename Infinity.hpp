@@ -1,4 +1,4 @@
-// Infinity on Mar 5, 2017
+// Infinity on May 26, 2017
 
 #include <bits/stdc++.h>
 
@@ -7,6 +7,10 @@
 
 #define define_triple(classname, x, y, z) struct classname { int x; int y; int z; \
     classname(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {} };
+
+#define less_than(classname, lhs, rhs) bool operator <(ConstRef<classname> lhs, ConstRef<classname> rhs)
+
+#define bool_lambda(type, var) [](const type &var##1, const type &var##2)
 
 using namespace std;
 
@@ -221,6 +225,16 @@ Range range(int from, int to)
 
 Range range(int from, int to, int step)
 { return {to, from, step}; }
+
+template<typename T>
+vector<int> argsort(const vector<T> &a)
+{ vector<pair<T, int>> b; for (unsigned i = 0; i < a.size(); i++) { b.emplace_back(a[i], i); }
+  sort(b.begin(), b.end()); vector<int> c; for (pair<T, int> p : b) { c.push_back(p.second); }
+  return c; }
+
+template<typename T>
+vector<T> rearrange(const vector<T> &a, const vector<int>& b)
+{ vector<T> c; for (int i : b) { c.push_back(a[i]); } return c; }
 } // namespace Infinity::BattleLab
 
 inline namespace Miscelleneous
@@ -297,7 +311,7 @@ template<typename T> inline constexpr bool even(T a)
 template<typename T1, typename T2> inline constexpr T1 smod(T1 x, T2 m)
 { return x > m ? x - m : x + m < m ? x + m : x; }
 
-// lengthes of recurring period of replacement `a`
+// lengthes of recurring period of replacement `a'
 vector<int> repetend(vector<int> a)
 { vector<int> p(a.size(), -1);
   for (unsigned i = 0; i < a.size(); i++) if (p[i] == -1) {
