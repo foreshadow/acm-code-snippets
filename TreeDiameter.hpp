@@ -5,10 +5,10 @@ class TreeDiameter
 public:
     TreeDiameter(unsigned size) : edge(), head(size, -1), maxn(size), smaxn(size), maxid(size), smaxid(size) {}
 
-    void addEdge(int u, int v, int w)
+    void addEdge(int u, int v, int w = 1)
     { edge.push_back({v, head[u], w}); head[u] = edge.size() - 1; edge.push_back({u, head[v], w}); head[v] = edge.size() - 1; }
 
-    unsigned diameter(unsigned root)
+    unsigned diameter(unsigned root = 0)
     { dfs1(root, -1); dfs2(root, -1); return *max_element(maxn.begin(), maxn.end()); }
 
 private:
