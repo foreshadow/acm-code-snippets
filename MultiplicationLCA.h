@@ -4,7 +4,7 @@ class MultiplicationLCA
 
 public:
     MultiplicationLCA(const vector<int> &parents) :
-        n(parents.size()), f(parents), d(n), a(n, vector<int>(width)), c(n)
+        f(parents), d(parents.size()), a(parents.size(), vector<int>(width)), c(parents.size())
     { for (unsigned i = 1; i < parents.size(); i++) { c[parents[i]].push_back(i); } dfs(0); }
 
     int lca(int x, int y) const
@@ -28,5 +28,5 @@ private:
     }
 
 protected:
-    int n; vector<int> f, d; vector<vector<int>> a, c;
+    vector<int> f, d; vector<vector<int>> a, c;
 };
