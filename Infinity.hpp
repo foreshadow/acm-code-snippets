@@ -1,4 +1,4 @@
-// Infinity on Jul 15, 2017
+// Infinity on Jul 24, 2017
 
 #include <bits/stdc++.h>
 
@@ -25,6 +25,7 @@ inline namespace TypeDefine
 {
 using uint  = unsigned int;
 using ll    = long long int;
+using llong = long long int;
 using ull   = unsigned long long int;
 using ld    = long double;
 template<typename T> using ConstRef = const T &;
@@ -43,6 +44,12 @@ inline constexpr char itoc(const int n)
 
 inline int dtoi(const double d)
 { return round(d); }
+
+template<typename T, typename P> inline T ceil(T a, P b)
+{ return ::ceil(double(a) / b); }
+
+template<typename T, typename P> inline T floor(T a, P b)
+{ return ::floor(double(a) / b); }
 
 template<typename T> inline constexpr bool in(T x, T l, T r)
 { return l <= x && x <= r; }
@@ -181,10 +188,13 @@ public:
     { return this->size(); }
 
     template<typename... types> Array<T> &append(types ...args)
-    { emplace_back(args...); return *this; }
+    { this->emplace_back(args...); return *this; }
 
     T sum() const
     { T s = T(); for (T val : *this) { s += val; } return s; }
+
+    template<typename P> P sum(P val) const
+    { for (T x : *this) { val += x; } return val; }
 
     Array<T> &add(T increment = 1)
     { for (T &val : *this) { val += increment; } return *this; }
