@@ -5,7 +5,7 @@ public:
     unsigned len() const
     { return a.size(); }
 
-    unsigned &operator [](unsigned pos) // iterator fails
+    unsigned &operator [](unsigned pos) // iterator fails if reallocation happens
     { expand(pos + 1); return a[pos]; }
 
     BigInteger &operator +=(BigInteger &b)
