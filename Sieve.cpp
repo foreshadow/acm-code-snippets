@@ -6,7 +6,7 @@ struct Sieve : public vector<int>
         for (int i = 2; i < n; i++) {
             if (!b[i]) {
                 push_back(i);
-                for (int j = i + i; j < n; j++) {
+                for (int j = i + i; j < n; j += i) {
                     b[j] = true;
                 }
             }
