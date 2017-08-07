@@ -11,6 +11,9 @@ public:
         }
     }
 
+    vector<int> &result()
+    { return r; }
+
     int &operator [](unsigned n)
     { return r[n]; }
 
