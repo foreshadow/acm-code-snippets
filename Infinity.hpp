@@ -1,4 +1,4 @@
-// Infinity on Jul 24, 2017
+// Infinity on Aug 22, 2017
 
 #include <bits/stdc++.h>
 
@@ -10,8 +10,10 @@ inline namespace Infinity
     classname(int x = 0, int y = 0) : x(x), y(y) {} };
 #define define_triple(classname, x, y, z) struct classname { int x; int y; int z; \
     classname(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {} };
-#define less_than(classname) bool operator <(ConstRef<classname> lhs, ConstRef<classname> rhs)
-#define bool_lambda(type) [](const type &lhs, const type &rhs)
+#define less_than(classname) bool operator <(const classname &lhs, const classname &rhs)
+#define lambda_2crs(type) [](const type &lhs, const type &rhs)
+#define compare_2keys(type, var1, op1, var2, op2) lambda_2crs(type) \
+    { return lhs.var1 != rhs.var1 ? lhs.var1 op1 rhs.var1 : lhs.var2 op2 rhs.var2; }
 
 inline namespace Constant
 {
@@ -29,8 +31,6 @@ using llong = long long int;
 using ull   = unsigned long long int;
 using ld    = long double;
 template<typename T> using ConstRef = const T &;
-template<typename T = int> using Pair = pair<T, T>;
-template<typename T = int> using PairList = vector<Pair<T>>;
 template<typename T = vector<int>> using Iter = typename T::iterator;
 } // namespace Infinity::TypeDefine
 
@@ -140,6 +140,10 @@ template<typename T, typename F> T dichotomy2(T l, T r, F check, T prec = 1)
 inline namespace BattleLab
 {
 template<typename T>
+vector<T> iota(T val)
+{ vector<T> a(val); iota(a.begin(), a.end(), T()); return a; }
+
+template<typename T>
 vector<int> argsort(const vector<T> &a)
 { vector<pair<T, int>> b; for (unsigned i = 0; i < a.size(); i++) { b.emplace_back(a[i], i); }
   stable_sort(b.begin(), b.end()); vector<int> c; for (pair<T, int> p : b) { c.push_back(p.second); }
@@ -158,21 +162,6 @@ struct
     bool last() const { return i == n - 1; }
 } loop;
 
-#if __cplusplus >= 201402L
-#define STL_ALGO_OO(func) \
-    template<typename... types> auto func(types ...args) \
-    { return std::func(this->begin(), this->end(), args...); }
-#define INFINITY_ALGO_OO(func) \
-    template<typename... types> auto func(types ...args) \
-    { return ::func(*this, args...); }
-#define INFINITY_ALGO_OO_OVERRIDE(func, return_type) \
-    template<typename... types> return_type func(types ...args) \
-    { return ::func(*this, args...); }
-#define PAST_PARTICIPLE(stem, pp) \
-    template<typename... types> Array<T> &pp(types ...args) \
-    { stem(args...); return *this; }
-#endif
-
 template<typename T>
 class Array : public std::vector<T>
 {
@@ -187,8 +176,17 @@ public:
     int length() const
     { return this->size(); }
 
+    T min() const
+    { return *min_element(this->begin(), this->end()); }
+
+    T max() const
+    { return *max_element(this->begin(), this->end()); }
+
     template<typename... types> Array<T> &append(types ...args)
     { this->emplace_back(args...); return *this; }
+
+    template<typename... types> Array<T> &prepend(types ...args)
+    { insert(this->begin(), args...); return *this; }
 
     T sum() const
     { T s = T(); for (T val : *this) { s += val; } return s; }
@@ -211,6 +209,19 @@ public:
       a.emplace_back(i, j); i = j; } return a; }
 
 #if __cplusplus >= 201402L
+#define STL_ALGO_OO(func) \
+    template<typename... types> auto func(types ...args) \
+    { return std::func(this->begin(), this->end(), args...); }
+#define INFINITY_ALGO_OO(func) \
+    template<typename... types> auto func(types ...args) \
+    { return ::func(*this, args...); }
+#define INFINITY_ALGO_OO_OVERRIDE(func, return_type) \
+    template<typename... types> return_type func(types ...args) \
+    { return ::func(*this, args...); }
+#define PAST_PARTICIPLE(stem, pp) \
+    template<typename... types> Array<T> &pp(types ...args) \
+    { Array<T> a = *this; a.stem(args...); return a; }
+
     STL_ALGO_OO(sort)           PAST_PARTICIPLE(sort, sorted)
     STL_ALGO_OO(stable_sort)    PAST_PARTICIPLE(stable_sort, stable_sorted)
     STL_ALGO_OO(reverse)        PAST_PARTICIPLE(reverse, reversed)
@@ -222,6 +233,12 @@ public:
     STL_ALGO_OO(iota)           STL_ALGO_OO(partial_sum)
     INFINITY_ALGO_OO(lbound)    INFINITY_ALGO_OO(ubound)
     INFINITY_ALGO_OO_OVERRIDE(argsort, Array<int>)
+    INFINITY_ALGO_OO_OVERRIDE(iota, Array<int>)
+
+#undef STL_ALGO_OO
+#undef INFINITY_ALGO_OO
+#undef INFINITY_ALGO_OO_OVERRIDE
+#undef PAST_PARTICIPLE
 #endif
 };
 
@@ -229,13 +246,11 @@ Array<int> getints(unsigned size)
 { Array<int> a(size); for (int &x : a) { scanf("%d", &x); } return a; }
 
 using ints = Array<int>;
-using doubles = Array<double>;
 using llongs = Array<long long>;
-
-#undef STL_ALGO_OO
-#undef INFINITY_ALGO_OO
-#undef INFINITY_ALGO_OO_OVERRIDE
-#undef PAST_PARTICIPLE
+using doubles = Array<double>;
+using Pair = pair<int, int>;
+using PairList = Array<Pair>;
+using intss = Array<Array<int>>;
 
 // Array ends
 
@@ -246,16 +261,73 @@ class String : public std::string
 public:
     using std::string::string;
 
+    String &prepend(char c)
+    { this->insert(this->begin(), c); return *this; }
+
+    int len() const
+    { return length(); }
+
+    String replace(const String &pattern, const String &replace)
+    {
+        String t;
+        unsigned pos = 0, sub = 0;
+        while ((sub = this->find(pattern, pos)) != string::npos) {
+            t += this->substr(pos, sub - pos) + replace;
+            pos = sub + pattern.length();
+        }
+        t += this->substr(pos);
+        return t;
+    }
+
     Array<String> split(char delimiter = ' ') const
-    { Array<String> a(1); for (char c : *this) {
-        if (c != delimiter) { a.back().push_back(c); } else { a.emplace_back(); }
-      } return a; }
+    {
+        Array<String> a(1);
+        for (char c : *this) {
+            if (c != delimiter) {
+                a.back().push_back(c);
+            } else {
+                a.emplace_back();
+            }
+        }
+        return a;
+    }
+
+    String repeat(int times) const
+    { String s; while (--times) { s += *this; } return s; }
+
+    String reversed() const
+    { String s{*this}; reverse(s.begin(), s.end()); return s; }
 
     int toInt(int base = 10) const
     { return stoi(*this, 0, base); }
 };
 
-using StringList = Array<String>;
+inline String getstr(unsigned size = 0x100000)
+{ char s[++size]; scanf("%s", s); return s; }
+
+inline String getln(unsigned size = 0x100000)
+{ char s[++size]; scanf("%[^\n]", s); getchar(); return s; }
+
+inline void print(String s)
+{ printf("%s", s.data()); }
+
+class StringList : public Array<String>
+{
+public:
+    using Array<String>::Array;
+
+    String join(const String &delimiter)
+    {
+        String s = this->front();
+        for (int i = 1; i < this->length(); i++) {
+            s += delimiter + this->at(i);
+        }
+        return s;
+    }
+};
+
+inline StringList getstrs(int n, unsigned buffSize = 0x100000)
+{ StringList sl; while (n--) { sl.append(getstr(buffSize)); } return sl; }
 
 // String ends
 
@@ -268,12 +340,11 @@ protected:
     int lb, ub, b;
 };
 
-template<typename T> class AdjacencyList : public vector<vector<T>>
+struct AdjacencyList : public vector<vector<int>>
 {
-public:
-    AdjacencyList(unsigned size = 0) : vector<vector<T>>(size) {}
-    void addDirected(T u, T v) { (*this)[u].push_back(v); }
-    void addUndirected(T u, T v) { addDirected(u, v); addDirected(v, u); }
+    using vector<vector<int>>::vector;
+    void addDirected(int u, int v) { (*this)[u].push_back(v); }
+    void addUndirected(int u, int v) { addDirected(u, v); addDirected(v, u); }
 };
 
 class Range
@@ -315,13 +386,11 @@ inline void print(const int n)
 inline void print(const unsigned n)
 { printf("%u", n); }
 
-//#ifndef __i386__
 inline void print(const long long n)
 { printf("%lld", n); }
 
 inline void print(const unsigned long long n)
 { printf("%lld", n); }
-//#endif
 
 //inline void print(const int64_t n)
 //{ printf("%" PRId64, n); }
@@ -344,7 +413,7 @@ inline void print(const char s[])
 inline void print(const string &s)
 { printf("%s", s.data()); }
 
-template<typename T> inline void printSP(const T a)
+template<typename T> inline void printsp(const T a)
 { print(a); print(SP); }
 
 template<typename T, typename U> inline void print(const pair<T, U> &p)
@@ -356,13 +425,10 @@ template<class T> inline void print(const T a)
 template<typename T> inline void print(initializer_list<T> list)
 { for (auto i = list.begin(); i != list.end(); i++) { if (i != list.begin()) print(SP); print(*i); } }
 
-template<typename T> inline void printr(T begin, T end)
-{ for (print(*begin++); begin != end; ++begin) print(SP), print(*begin); }
-
 inline void println()
 { print(LF); }
 
-inline void printSP()
+inline void printsp()
 { print(SP); }
 
 template<typename T> inline void println(const T &a)
@@ -371,16 +437,13 @@ template<typename T> inline void println(const T &a)
 template<typename T> inline void println(initializer_list<T> list)
 { for (auto i = list.begin(); i != list.end(); i++) { if (i != list.begin()) print(SP); print(*i); } print(LF); }
 
-template<class T> inline void printlns(const T &a)
-{ for (auto n : a) println(n); }
-
 template<typename T, typename... types> inline void print(const T &a, const types &...args)
 { print(a); print(args...); }
 
 template<typename... types> inline void println(const types &...args)
 { print(args...); print(LF); }
 
-template<typename... types> inline void printSP(const types &...args)
+template<typename... types> inline void printsp(const types &...args)
 { print(args...); print(SP); }
 
 inline void printlnYN(bool b)
@@ -404,31 +467,19 @@ template<typename T, typename ... types> inline int read(T &n, types &...args)
 inline char getcc()
 { char c; do c = getchar(); while (isspace(c)); return c; }
 
-inline int getint()
-{ int n; read(n); return n; }
+inline int getint(int increment = 0)
+{ int n; scanf("%d", &n); return n + increment; }
 
-inline int64_t getll()
-{ int64_t n; read(n); return n; }
+inline int64_t getll(int64_t increment = 0)
+{ int64_t n; scanf("%" SCNd64, &n); return n + increment; }
 
 inline double getdbl()
 { double n; scanf("%lf", &n); return n; }
 
-inline pair<int, int> getpair()
-{ pair<int, int> p; scanf("%d%d", &p.first, &p.second); return p; }
+inline Pair getpair()
+{ Pair p; scanf("%d%d", &p.first, &p.second); return p; }
 
-//inline vector<int> getints(int n)
-//{ vector<int> v(n); for (int &i : v) i = getint(); return v; }
-
-inline vector<pair<int, int> > getpairs(int n)
-{ vector<pair<int, int> > v(n); for (pair<int, int> &p : v) { p = getpair(); } return v; }
-
-inline void read(string &str, unsigned size)
-{ char s[++size]; scanf("%s", s); str.assign(s); }
-
-inline string getstr(unsigned size = 0x100000)
-{ string s; read(s, size); return s; }
-
-inline string getln(unsigned size = 0x100000)
-{ char s[++size]; scanf("%[^\n]", s); getchar(); return s; }
+inline PairList getpairs(int n)
+{ PairList v(n); for (Pair &p : v) { p = getpair(); } return v; }
 } // namespace Infinity::IO
 } // namespace Infinity
