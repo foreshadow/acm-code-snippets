@@ -3,14 +3,14 @@ template<typename ForwardIterator>
 unsigned longestIncreasingSubsequence(ForwardIterator begin, ForwardIterator end)
 {
     vector<typename ForwardIterator::value_type> d;
-    while (begin != end)
-    {
+    while (begin != end) {
         // upper_bound if non-decreasing
         auto k = lower_bound(d.begin(), d.end(), *begin);
-        if (k == d.end())
+        if (k == d.end()) {
             d.push_back(*begin++);
-        else
+        } else {
             *k = *begin++;
+        }
     }
     return d.size();
 }
