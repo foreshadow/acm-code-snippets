@@ -1,4 +1,4 @@
-// Infinity on Aug 22, 2017
+// Infinity on Oct 8, 2017
 
 #include <bits/stdc++.h>
 
@@ -25,11 +25,12 @@ constexpr const double eps      = DBL_EPSILON;
 
 inline namespace TypeDefine
 {
-using uint  = unsigned int;
-using ll    = long long int;
-using llong = long long int;
-using ull   = unsigned long long int;
-using ld    = long double;
+using uint      = unsigned int;
+using ll        = long long int;
+using llong     = long long int;
+using ull       = unsigned long long int;
+using ullong    = unsigned long long int;
+using ld        = long double;
 template<typename T> using ConstRef = const T &;
 template<typename T = vector<int>> using Iter = typename T::iterator;
 } // namespace Infinity::TypeDefine
@@ -135,6 +136,9 @@ template<typename T, typename F> T dichotomy(T l, T r, F check, T prec = 1)
 // returns the smallest value in (l, r] s.t. check(x)
 template<typename T, typename F> T dichotomy2(T l, T r, F check, T prec = 1)
 { while (r - l > prec) { T m = rmiddle(l, r); (check(m) ? r : l) = m; } return r; }
+
+template<typename T> bool equals(initializer_list<T> list)
+{ for (T item : list) { if (item != *list.begin()) { return false; } } return true; }
 } // namespace Infinity::Miscelleneous
 
 inline namespace BattleLab
@@ -261,6 +265,9 @@ class String : public std::string
 public:
     using std::string::string;
 
+    String(const std::string &s = "") : std::string(s)
+    {}
+
     String &prepend(char c)
     { this->insert(this->begin(), c); return *this; }
 
@@ -324,6 +331,9 @@ public:
         }
         return s;
     }
+
+    operator vector<string>()
+    { vector<string> vs; for (String s : *this) { vs.push_back(s); } return vs; }
 };
 
 inline StringList getstrs(int n, unsigned buffSize = 0x100000)
@@ -370,6 +380,8 @@ protected:
 };
 
 typedef Range range;
+
+//#define repeat(x) for (loop.i = 0, loop.n = x; loop.i < loop.n; loop.i++)
 } // namespace Infinity::BattleLab
 
 inline namespace IO
